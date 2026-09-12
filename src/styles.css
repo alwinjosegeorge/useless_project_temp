@@ -1,0 +1,277 @@
+@import "tailwindcss" source(none);
+@source "../src";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+/*
+ * MEEMEE design system — cream paper, royal blue ink, editorial type.
+ * All colors are oklch semantic tokens. Never hardcode colors in components.
+ */
+
+@theme inline {
+  --radius-sm: calc(var(--radius) - 8px);
+  --radius-md: calc(var(--radius) - 4px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 8px);
+  --radius-2xl: calc(var(--radius) + 16px);
+  --radius-3xl: calc(var(--radius) + 28px);
+  --radius-4xl: calc(var(--radius) + 44px);
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-water: var(--water);
+  --color-water-deep: var(--water-deep);
+  --color-water-foreground: var(--water-foreground);
+  --color-sand: var(--sand);
+  --color-ink-soft: var(--ink-soft);
+
+  --font-display: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "DM Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-hand: "Caveat", ui-serif, cursive;
+
+  --shadow-paper: 0 1px 0 0 color-mix(in oklab, var(--foreground) 8%, transparent);
+  --shadow-lift: 0 18px 40px -24px color-mix(in oklab, var(--foreground) 45%, transparent);
+  --shadow-deep: 0 30px 70px -40px color-mix(in oklab, var(--primary) 60%, transparent);
+}
+
+:root {
+  --radius: 1.25rem;
+  --background: oklch(0.962 0.018 88);
+  --foreground: oklch(0.205 0.052 265);
+  --card: oklch(0.984 0.011 90);
+  --card-foreground: oklch(0.205 0.052 265);
+  --popover: oklch(0.984 0.011 90);
+  --popover-foreground: oklch(0.205 0.052 265);
+  --primary: oklch(0.395 0.196 265);
+  --primary-foreground: oklch(0.978 0.014 90);
+  --secondary: oklch(0.932 0.024 88);
+  --secondary-foreground: oklch(0.205 0.052 265);
+  --muted: oklch(0.936 0.021 88);
+  --muted-foreground: oklch(0.505 0.036 265);
+  --accent: oklch(0.912 0.043 90);
+  --accent-foreground: oklch(0.395 0.196 265);
+  --destructive: oklch(0.577 0.245 27.325);
+  --destructive-foreground: oklch(0.984 0.003 247.858);
+  --border: oklch(0.86 0.026 88);
+  --input: oklch(0.86 0.026 88);
+  --ring: oklch(0.395 0.196 265);
+  --water: oklch(0.42 0.185 262);
+  --water-deep: oklch(0.29 0.15 265);
+  --water-foreground: oklch(0.972 0.014 90);
+  --sand: oklch(0.9 0.045 88);
+  --ink-soft: oklch(0.36 0.05 265);
+}
+
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display);
+    letter-spacing: -0.03em;
+  }
+}
+
+/* ---------- utilities ---------- */
+
+@utility display-xl {
+  font-family: var(--font-display);
+  font-weight: 700;
+  line-height: 0.88;
+  letter-spacing: -0.045em;
+  text-transform: uppercase;
+}
+
+@utility eyebrow {
+  font-family: var(--font-sans);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--color-muted-foreground);
+}
+
+@utility hand {
+  font-family: var(--font-hand);
+  font-size: 1.375rem;
+  line-height: 1.25;
+}
+
+@utility paper-card {
+  background-color: var(--color-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-2xl);
+  box-shadow: var(--shadow-paper);
+}
+
+@utility lift-hover {
+  transition:
+    transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1),
+    box-shadow 0.35s ease,
+    border-color 0.35s ease;
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lift);
+    border-color: color-mix(in oklab, var(--color-primary) 35%, var(--color-border));
+  }
+}
+
+@utility press {
+  transition: transform 0.18s cubic-bezier(0.2, 0.8, 0.2, 1);
+  &:active {
+    transform: scale(0.96);
+  }
+}
+
+@utility grid-paper {
+  background-image:
+    radial-gradient(
+      circle at 1px 1px,
+      color-mix(in oklab, var(--color-foreground) 14%, transparent) 1px,
+      transparent 0
+    );
+  background-size: 22px 22px;
+}
+
+/* ---------- animations ---------- */
+
+@keyframes rise {
+  0% {
+    transform: translateY(0) translateX(0) scale(0.7);
+    opacity: 0;
+  }
+  15% {
+    opacity: 0.9;
+  }
+  100% {
+    transform: translateY(-120%) translateX(14px) scale(1.15);
+    opacity: 0;
+  }
+}
+
+@keyframes swim {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) rotate(-1.5deg);
+  }
+  50% {
+    transform: translate3d(10px, -14px, 0) rotate(2deg);
+  }
+}
+
+@keyframes sway {
+  0%,
+  100% {
+    transform: rotate(-5deg);
+  }
+  50% {
+    transform: rotate(6deg);
+  }
+}
+
+@keyframes enter-up {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fill-bar {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes drift {
+  0% {
+    transform: translateX(-6%);
+  }
+  100% {
+    transform: translateX(6%);
+  }
+}
+
+@utility animate-rise {
+  animation: rise 7s linear infinite;
+}
+
+@utility animate-swim {
+  animation: swim 6s ease-in-out infinite;
+}
+
+@utility animate-sway {
+  animation: sway 5s ease-in-out infinite;
+  transform-origin: bottom center;
+}
+
+@utility animate-enter-up {
+  animation: enter-up 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+@utility animate-fill-bar {
+  transform-origin: left center;
+  animation: fill-bar 1.4s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+@utility animate-drift {
+  animation: drift 14s ease-in-out infinite alternate;
+}
+
+/* SUPPRESS SYSTEM CURSOR GLOBALLY - ONLY THE CUTE FISH CURSOR IS VISIBLE */
+@media (pointer: fine) {
+  *,
+  *::before,
+  *::after,
+  html,
+  body,
+  a,
+  button,
+  input,
+  textarea,
+  select,
+  div,
+  span,
+  p,
+  img,
+  [role="button"],
+  .press {
+    cursor: none !important;
+  }
+}
