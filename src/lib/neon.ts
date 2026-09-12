@@ -4,7 +4,7 @@ const connectionString =
   (import.meta.env["VITE_NEON_DATABASE_URL"] as string | undefined) ||
   'postgresql://neondb_owner:npg_0vWTAN8wHfmn@ep-old-wildflower-ax6z5fx4-pooler.c-4.us-east-2.aws.neon.tech/neondb?sslmode=require';
 
-export const sql = neon(connectionString);
+export const sql = neon(connectionString, { disableWarningInBrowsers: true });
 
 export interface RaceMatchRecord {
   id?: string;
