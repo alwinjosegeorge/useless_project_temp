@@ -98,7 +98,7 @@ graph TD
 *Demonstrating 4-quadrant fish motion tracking, 5-second dwell hold countdown, and 2-player multiplayer race.*
 
 # Additional Demos
-- Live Web Deployment (Vercel): [Add your live link here]
+- Live Web Deployment (Vercel): https://meeemee.vercel.app/
 - Interactive IQ Test: `/iq-test`
 - 2-Player Olympic Race: `/olympics`
 - 4-Level Training: `/train`
