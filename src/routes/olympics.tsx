@@ -4,6 +4,7 @@ import meemee from "@/assets/meemee.png";
 import { Bubbles, Eyebrow, PillButton, SectionHead } from "@/components/meemee/bits";
 import { OlympicGameArena, OlympicEventId } from "@/components/meemee/OlympicGameArena";
 import { DualFishArena } from "@/components/meemee/DualFishArena";
+import { recordWinToLeaderboard } from "@/lib/neon";
 
 export const Route = createFileRoute("/olympics")({
   head: () => ({
@@ -115,6 +116,7 @@ function Olympics() {
   const [playerMedals, setPlayerMedals] = useState({ gold: 2, silver: 1, bronze: 0 });
   const [simulating, setSimulating] = useState(false);
   const [simResult, setSimResult] = useState<string | null>(null);
+  const [neonToast, setNeonToast] = useState<string | null>(null);
 
   // Auto-open 2-Player duel if joining via shared link (?room=XXXX or ?join=XXXX)
   useEffect(() => {
@@ -134,6 +136,20 @@ function Olympics() {
       ...prev,
       [medal]: prev[medal] + 1,
     }));
+
+    const eventNames: Record<OlympicEventId, { name: string; time: number }> = {
+      "100m": { name: "100m Olympic Sprint", time: 14.1 },
+      "uturn": { name: "Fastest U-Turn Challenge", time: 0.04 },
+      "splash": { name: "Dramatic Splash Arena", time: 9.8 },
+      "bubbles": { name: "Best Bubble Formation", time: 12.5 },
+      "lazy": { name: "Inertia Floating Sprint", time: 20.0 },
+    };
+
+    const ev = eventNames[_id] || { name: "Olympic Event", time: 15.0 };
+    recordWinToLeaderboard("Meemee", ev.time, ev.name, medal).then(() => {
+      setNeonToast(`🏅 ${medal.toUpperCase()} Medal in "${ev.name}" synced to Neon Leaderboard!`);
+      setTimeout(() => setNeonToast(null), 4000);
+    });
   };
 
   const runSimulation = (ev: OlympicEvent) => {
@@ -165,6 +181,16 @@ function Olympics() {
           5 Playable Events
         </span>
       </div>
+
+      {neonToast && (
+        <div className="mt-6 flex items-center justify-between rounded-xl border border-emerald-500/40 bg-emerald-500/10 p-3.5 text-xs text-emerald-800 dark:text-emerald-300 animate-enter-up">
+          <div className="flex items-center gap-2">
+            <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
+            <span className="font-semibold">{neonToast}</span>
+          </div>
+          <span className="font-mono text-[0.65rem] opacity-75">Neon DB: leaderboard</span>
+        </div>
+      )}
 
       {/* MEDAL TALLY BANNER */}
       <div className="paper-card grid-paper mt-10 p-6 sm:p-8">

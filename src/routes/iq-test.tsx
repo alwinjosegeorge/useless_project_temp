@@ -3,6 +3,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import meemee from "@/assets/meemee.png";
 import coachFin from "@/assets/coach-fin.png";
 import { Bubbles, Eyebrow, PillButton } from "@/components/meemee/bits";
+import { saveFishIQRecord, getTopFishIQRecords } from "@/lib/neon";
 
 export const Route = createFileRoute("/iq-test")({
   head: () => ({
@@ -255,6 +256,17 @@ function FishIQTest() {
   const [selectedOption, setSelectedOption] = useState<"A" | "B" | "C" | "D" | null>(null);
   const [answers, setAnswers] = useState<Record<number, "A" | "B" | "C" | "D">>({});
   const [completed, setCompleted] = useState(false);
+  const [iqSaved, setIqSaved] = useState(false);
+  const [topRecords, setTopRecords] = useState<any[]>([]);
+
+  // Fetch top IQ records from Neon
+  useEffect(() => {
+    getTopFishIQRecords(5).then((records) => {
+      if (records && records.length > 0) {
+        setTopRecords(records);
+      }
+    });
+  }, []);
 
   // Fish in-pool coordinates: x (15 - 85%), y (18 - 82%)
   const [fishPos, setFishPos] = useState({ x: 50, y: 50 });
@@ -554,6 +566,19 @@ function FishIQTest() {
     } else {
       setCompleted(true);
       stopCamera();
+      saveFishIQRecord({
+        fishName: "Meemee",
+        iqScore: 168,
+        grade: "Certified Unnecessarily Genius",
+        waterReflexes: 100,
+        hookAvoidance: 50,
+        glassResilience: "∞",
+        coachNote:
+          "Answered with complete disregard for traditional biological logic by swimming through all 4 quadrants.",
+      }).then(() => {
+        setIqSaved(true);
+        getTopFishIQRecords(5).then(setTopRecords);
+      });
     }
   };
 
@@ -1320,6 +1345,50 @@ function FishIQTest() {
               <p className="mt-1 text-xs text-muted-foreground">Bonking ongoing</p>
             </div>
           </div>
+
+          {/* NEON VERIFICATION STAMP */}
+          <div className="mt-6 flex items-center justify-between rounded-xl border border-emerald-500/40 bg-emerald-500/10 p-3.5 text-xs text-emerald-800 dark:text-emerald-300">
+            <div className="flex items-center gap-2">
+              <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
+              <span className="font-semibold">
+                {iqSaved ? "Exam Certified & Stored in Neon PostgreSQL (wandering-glitter-70313579)" : "Syncing Examination to Neon Database..."}
+              </span>
+            </div>
+            <span className="font-mono text-[0.65rem] opacity-75">Table: fish_iq_records</span>
+          </div>
+
+          {/* GLOBAL FISH IQ HALL OF FAME */}
+          {topRecords.length > 0 && (
+            <div className="mt-8">
+              <Eyebrow>Neon Global Standings</Eyebrow>
+              <h3 className="display-xl mt-2 text-xl sm:text-2xl">Aquatic Genius Hall of Fame</h3>
+              <p className="mt-1 text-xs text-muted-foreground">
+                Verified high IQ fish recorded in Neon Serverless PostgreSQL.
+              </p>
+              <div className="mt-4 space-y-2">
+                {topRecords.map((rec, i) => (
+                  <div
+                    key={rec.id || i}
+                    className="flex items-center justify-between rounded-xl border border-border bg-card p-3 text-xs"
+                  >
+                    <div className="flex items-center gap-3">
+                      <span className="font-display font-bold text-primary">#{i + 1}</span>
+                      <div>
+                        <span className="font-bold uppercase text-foreground">{rec.fish_name}</span>
+                        <span className="ml-2 text-[0.65rem] text-muted-foreground">({rec.grade})</span>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <span className="font-mono text-[0.65rem] text-muted-foreground">Reflexes: {rec.water_reflexes}%</span>
+                      <span className="rounded bg-primary/10 px-2 py-0.5 font-display text-sm font-bold text-primary">
+                        IQ {rec.iq_score}
+                      </span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
 
           {/* ACTIONS */}
           <div className="mt-10 flex flex-wrap gap-3">

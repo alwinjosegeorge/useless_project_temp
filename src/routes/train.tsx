@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { CoachFin, Eyebrow, PillButton } from "@/components/meemee/bits";
 import { FishEmergency } from "@/components/meemee/FishEmergency";
 import { CameraFishBowl } from "@/components/meemee/CameraFishBowl";
+import { getTrainingProgress, saveTrainingProgress } from "@/lib/neon";
 
 export const Route = createFileRoute("/train")({
   head: () => ({
@@ -57,12 +58,27 @@ const levels = [
 function Train() {
   const [currentLevel, setCurrentLevel] = useState("01");
   const [completedLevels, setCompletedLevels] = useState<Record<string, boolean>>({});
+  const [neonSynced, setNeonSynced] = useState(false);
+
+  // Fetch student fish progression from Neon database
+  useEffect(() => {
+    getTrainingProgress("Meemee").then((saved) => {
+      if (saved && Object.keys(saved).length > 0) {
+        setCompletedLevels(saved);
+        setNeonSynced(true);
+      }
+    });
+  }, []);
 
   const activeLevel = levels.find((l) => l.id === currentLevel) || levels[0]!;
   const clearedCount = Object.keys(completedLevels).length;
 
   const handleCompleteLevel = (levelId: string) => {
     setCompletedLevels((prev) => ({ ...prev, [levelId]: true }));
+    const lvl = levels.find((l) => l.id === levelId);
+    saveTrainingProgress("Meemee", levelId, lvl?.name || `Level ${levelId}`).then(() => {
+      setNeonSynced(true);
+    });
   };
 
   const handleNextLevel = () => {
@@ -80,12 +96,18 @@ function Train() {
           <h1 className="display-xl mt-3 text-[clamp(2.25rem,8vw,4.5rem)]">Training Pool</h1>
         </div>
         <div className="flex flex-col items-end gap-1.5">
-          <span className="shrink-0 rounded-full bg-primary px-4 py-2 text-[0.7rem] font-semibold uppercase tracking-[0.16em] text-primary-foreground shadow-lift">
-            Level {currentLevel} · {activeLevel.name}
-          </span>
+          <div className="flex items-center gap-2">
+            <span className="inline-flex items-center gap-1 rounded-full border border-emerald-500/40 bg-emerald-500/10 px-2.5 py-1 text-[0.65rem] font-bold text-emerald-600 dark:text-emerald-400">
+              <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
+              {neonSynced ? "Neon Progression Synced" : "Neon Standby"}
+            </span>
+            <span className="shrink-0 rounded-full bg-primary px-4 py-2 text-[0.7rem] font-semibold uppercase tracking-[0.16em] text-primary-foreground shadow-lift">
+              Level {currentLevel} · {activeLevel.name}
+            </span>
+          </div>
           {clearedCount > 0 && (
             <span className="text-[0.65rem] font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400">
-              🏆 {clearedCount} / 4 Levels Cleared
+              🏆 {clearedCount} / 4 Levels Cleared (Saved to DB)
             </span>
           )}
         </div>
