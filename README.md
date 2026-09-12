@@ -3,7 +3,7 @@
 # MEEMEE Swim Academy 🐟 🎯
 
 ## Basic Details
-### Team Name: Team Meemee
+### Team Name: pazhampori
 
 ### Team Members
 - Team Lead: Alwin Jose George - St. Joseph's College of Engineering and Technology, Palai (SJCET Palai)
