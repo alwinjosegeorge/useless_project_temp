@@ -7,8 +7,7 @@
 
 ### Team Members
 - Team Lead: Alwin Jose George - St. Joseph's College of Engineering and Technology, Palai (SJCET Palai)
-- Member 2: [Name] - [College]
-- Member 3: [Name] - [College]
+- Member 2: Febin Noble - St. Joseph's College of Engineering and Technology, Palai (SJCET Palai)
 
 ### Project Description
 An elite, playful aquatic web academy where actual fish (or humans waving hands) use webcam computer vision to navigate 4 interactive training courses, take standardized aquatic IQ tests with a 5-second dwell hold, and compete in real-time 2-player peer-to-peer Olympic sprints.
@@ -26,8 +25,9 @@ We built MEEMEE Swim Academy — complete with:
 ## Technical Details
 ### Technologies/Components Used
 For Software:
-- **Languages**: TypeScript, HTML5, CSS3
+- **Languages**: TypeScript, HTML5, CSS3, SQL
 - **Frameworks**: React 19, TanStack Start, TanStack Router, Tailwind CSS v4, Vite, Nitro
+- **Database / Backend**: Neon Serverless PostgreSQL (`@neondatabase/serverless`)
 - **Libraries**: PeerJS (WebRTC), Radix UI, Lucide React
 - **Tools & APIs**: HTML5 Canvas Optical Differencing, Web Audio API, MediaDevices API
 
