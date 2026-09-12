@@ -69,6 +69,18 @@ For Software:
 ![Bubble Pop Arena with Fish Cursor](screenshots/04-bubble-pop-arena.png)
 *Event 04 Bubble Pop Arena: Custom swimming fish cursor popping bubbles under Coach Fin's watchful eye.*
 
+![Olympic Event: Fastest U-Turn](screenshots/05-olympic-fastest-uturn.png)
+*Olympic Event: Fastest U-Turn (Agility) — Instant 180° panic turn when approaching harmless rocks or friendly snails with live optical motion tracking.*
+
+![Olympic Event: Most Dramatic Splash](screenshots/06-olympic-dramatic-splash.png)
+*Olympic Event: Most Dramatic Splash (Artistic Theatrics) — Breaching surface tension with maximum emotional distress and cinematic turbulence.*
+
+![Olympic Event: Best Bubble Formation](screenshots/07-olympic-best-bubble-formation.png)
+*Olympic Event: Best Bubble Formation (Aerodynamic Art) — Producing pristine spherical oxygen bubbles from the gills with majestic rhythm.*
+
+![Olympic Event: Swimming While Doing Absolutely Nothing](screenshots/08-olympic-swimming-doing-nothing.png)
+*Olympic Event: Swimming While Doing Absolutely Nothing (Supreme Inertia) — Floating passively while letting current currents do 100% of the effort.*
+
 # Diagrams
 ```mermaid
 graph TD
@@ -93,8 +105,7 @@ graph TD
 
 ## Team Contributions
 - Alwin Jose George: Full-stack architecture, 4-quadrant fish motion tracking, 5-second dwell confirmation engine, WebRTC 2-player Olympic race, and responsive UI design.
-- [Member 2]: [Testing, assets, gameplay calibration]
-- [Member 3]: [Documentation, demo video, presentation]
+- Febin Noble: Neon Serverless PostgreSQL backend integration, database schema design, and gameplay testing.
 
 ---
 Made with ❤️ at TinkerHub Useless Projects 
