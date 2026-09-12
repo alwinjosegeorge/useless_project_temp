@@ -8,6 +8,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { FishDuelSession, FishTelemetry } from "@/lib/fishDuelPeer";
+import { saveRaceMatch, recordWinToLeaderboard } from "@/lib/neon";
 
 export interface DualFishArenaProps {
   isOpen: boolean;
@@ -61,6 +62,7 @@ export function DualFishArena({
   const [oppDist, setOppDist] = useState(0);
   const [winnerName, setWinnerName] = useState<string | null>(null);
   const [raceElapsed, setRaceElapsed] = useState(0);
+  const [neonSaved, setNeonSaved] = useState(false);
 
   // References
   const localVideoRef = useRef<HTMLVideoElement | null>(null);
@@ -173,6 +175,7 @@ export function DualFishArena({
     setMyDist(0);
     setOppDist(0);
     setWinnerName(null);
+    setNeonSaved(false);
 
     let count = 3;
     const interval = window.setInterval(() => {
@@ -187,11 +190,38 @@ export function DualFishArena({
     }, 1000);
   };
 
-  const finishRace = (winner: string) => {
+  const finishRace = async (winner: string) => {
     setGameState("finished");
     setWinnerName(winner);
     if (winner === myFishName && onAwardMedal) {
       onAwardMedal("gold");
+    }
+
+    const duration = Math.max(
+      1,
+      Math.round(((performance.now() - raceStartRef.current) / 1000) * 10) / 10
+    );
+    const room = assignedRoomCode
+      ? `FISH-${assignedRoomCode}`
+      : roomCodeInput
+      ? `FISH-${roomCodeInput}`
+      : "SOLO-DUEL";
+
+    // Asynchronously record result to Neon Serverless PostgreSQL
+    try {
+      await saveRaceMatch({
+        roomCode: room,
+        player1Name: myFishName,
+        player2Name: oppFishName,
+        winnerName: winner,
+        durationSeconds: duration,
+      });
+      if (winner === myFishName) {
+        await recordWinToLeaderboard(myFishName, duration);
+      }
+      setNeonSaved(true);
+    } catch (err) {
+      console.warn("Neon match record error:", err);
     }
   };
 
@@ -200,6 +230,7 @@ export function DualFishArena({
     setMyDist(0);
     setOppDist(0);
     setWinnerName(null);
+    setNeonSaved(false);
   };
 
   const triggerResetAll = () => {
@@ -747,6 +778,14 @@ export function DualFishArena({
                 <p className="hand mt-2 text-lg text-primary-foreground">
                   Official 2-Laptop Derby Time: {raceElapsed} seconds!
                 </p>
+                <div className="mt-2 inline-flex items-center gap-1.5 rounded-full bg-black/25 px-3 py-1 text-xs text-primary-foreground/90">
+                  <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
+                  <span>
+                    {neonSaved
+                      ? "Synced to Neon Serverless PostgreSQL Database"
+                      : "Recording result to Neon DB..."}
+                  </span>
+                </div>
                 <div className="mt-4 flex justify-center gap-3">
                   <button
                     type="button"
